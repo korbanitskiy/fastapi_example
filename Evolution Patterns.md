@@ -84,16 +84,6 @@ A process in a `Service` becomes long-running and should be offloaded to a task 
 - Keep a thin `Service` method that queues the task instead of executing it directly.
 - The logic in the worker task can reuse existing services and repositories.
 
-**Before:**
-```
-Route → Service (does work inline)
-```
-
-**After:**
-```
-Route → Service → Queue → Worker → Service
-```
-
 **Benefits:**
 - Same entry point for business logic
 - No duplicate logic in workers
@@ -113,30 +103,6 @@ You need to integrate with an external API that is still under development or no
 - Build and test your Service logic as if the API exists.
 - Even demos and end-to-end flows can work using this stubbed data.
 - When the real API becomes available, you **replace the stub implementation** with actual HTTP/gRPC calls — no changes required in your Service.
-
-#### Stub Phase
-
-```mermaid
-graph TD
-    A[Service] --> F[Client (Stub)]
-    F --> M[Test Data]
-```
-
-- Client returns static or mock data.
-- Service logic is fully testable and operational.
-
-#### Integration Phase
-
-```mermaid
-graph TD
-    A[Service] --> F[Client]
-    F --> G[Remote API]
-
-    subgraph Microservice Boundary
-        G[Remote API]
-    end
-```
-
 - Same Client interface is now wired to real API.
 - The rest of the system remains untouched.
 
@@ -147,7 +113,6 @@ graph TD
 - Smooth transition to production API with no architectural change
 
 ---
-
 
 ### 5. Isolated Exploration of Unfamiliar External APIs
 
